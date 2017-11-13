@@ -12,46 +12,14 @@
 
         <div id="map"></div>
 
-        <script>
-            let map;
 
-            function initMap() {
-
-//                const mapLoadPromise = new Promise((resolve, reject) => {
-//
-//                    // Constructor creates a new map - only center and zoom are required.
-                    map = new google.maps.Map(document.getElementById('map'), {
-                        center: {lat: 28.602427, lng: -81.20006},
-                        zoom: 15
-                    });
-
-//                    if(!window.google || !window.google.maps) {
-//                        reject(Error("Unable to load the map"));
-//
-//                    }
-//                    else {
-//                        resolve("Map Loaded at " + map.center.lat() + " " + map.center.lng());
-//                    }
-//                });
-//
-//                mapLoadPromise.then(function(result) {
-//                    console.log(result);
-//                }, function(err) {
-//                    console.log(err);
-//                });
-//
-//                return mapLoadPromise;
-            }
-
-        </script>
-
+        <script src="js/knockout-3.4.2.js"></script>
+        <script src="js/app.js"></script>
         <!--Async is what happens in most browsers. In a browser that doesn’t support async, it uses defer.-->
         <script async defer
-                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC8crCAJRVmHlOilqQV4xXzsYNF62UJ38&v=3&callback=initMap">
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC8crCAJRVmHlOilqQV4xXzsYNF62UJ38&v=3&callback=startApp">
         </script>
 
-        <script src = "js/knockout-3.4.2.js"></script>
-        <script src = "js/app.js"></script>
 
     </body>
 </html>
