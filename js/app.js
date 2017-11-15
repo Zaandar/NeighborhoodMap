@@ -1,5 +1,6 @@
 let map;
 
+// holds the data for a point of interest
 class PoiData {
     constructor(title, location) {
         self = this;
@@ -10,9 +11,11 @@ class PoiData {
     }
 }
 
+// the application view
 class View {
 }
 
+// the application data model
 class Model {
     constructor() {
         let self = this;
@@ -27,7 +30,9 @@ class Model {
     }
 }
 
+// the application view model
 class ViewModel {
+
     constructor() {
         let self = this;
 
@@ -36,8 +41,6 @@ class ViewModel {
 
         self.poiData = self.model.poi();
         self.poiMarkers = [];
-
-        self.mapBounds = new google.maps.LatLngBounds();
 
         self.initMaps();
         self.createMarkers();
@@ -48,20 +51,25 @@ class ViewModel {
         data.marker.setAnimation(google.maps.Animation.BOUNCE);
         google.maps.event.trigger(data.marker, 'click');
 
-        setTimeout(function(){
+        // stop the bouncing markers
+        setTimeout(function () {
             data.marker.setAnimation(null);
         }, 1400);
     }
 
+    // display the map
     initMaps() {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: 28.602427, lng: -81.20006},
-            zoom: 15
+            zoom: 14
         });
     }
 
+    // build and display a list of markers based on the poi list
     createMarkers() {
         for (let x = 0; x < this.poiData.length; x++) {
+
+            // create a marker
             let poiMarker = new google.maps.Marker({
                 map: map,
                 position: this.poiData[x].location,
@@ -70,30 +78,47 @@ class ViewModel {
                 id: x
             });
 
+            // assign a marker to each point of interest
             this.poiData[x].marker = poiMarker;
 
+            // add the marker to the marker array
             this.poiMarkers.push(poiMarker);
 
-            let infoWindow = new google.maps.InfoWindow({
-                content: this.poiMarkers[x].title
-            });
+            // create an info window for the marker
+            let infoWindow = new google.maps.InfoWindow();
 
+
+            // set a listener for clicks and display the info window
             poiMarker.addListener('click', function () {
+                if (openWindow){
+                    openWindow.close();
+                }
+
                 infoWindow.open(map, poiMarker);
+                infoWindow.setContent(poiMarker.title);
+                
+                openWindow = infoWindow;
             });
 
-            this.mapBounds.extend(this.poiData[x].location);
+            infoWindow.addListener('closeclick',function(){
+                // infoWindow.setMarker = null;
+                openWindow = null;
+            });
         }
     }
 }
 
-// callback from script load in html file
-function runApp() {
+
+let openWindow = null;
+
+function runApp()
+{
     let viewModel = new ViewModel();
     ko.applyBindings(viewModel);
 }
 
-function handleError() {
+function handleError()
+{
     alert("Error loading maps");
 }
 
