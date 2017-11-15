@@ -43,9 +43,14 @@ class ViewModel {
         self.createMarkers();
     }
 
-    // ko calls this when a list item is cliked
+    // ko calls this when a list item is clicked
     onClick(data, event) {
+        data.marker.setAnimation(google.maps.Animation.BOUNCE);
         google.maps.event.trigger(data.marker, 'click');
+
+        setTimeout(function(){
+            data.marker.setAnimation(null);
+        }, 1400);
     }
 
     initMaps() {
@@ -57,14 +62,10 @@ class ViewModel {
 
     createMarkers() {
         for (let x = 0; x < this.poiData.length; x++) {
-
-            let poiLocation = this.poiData[x].location;
-            let poiTitle = this.poiData[x].title;
-
             let poiMarker = new google.maps.Marker({
                 map: map,
-                position: poiLocation,
-                title: poiTitle,
+                position: this.poiData[x].location,
+                title: this.poiData[x].title,
                 animation: google.maps.Animation.DROP,
                 id: x
             });
@@ -81,8 +82,7 @@ class ViewModel {
                 infoWindow.open(map, poiMarker);
             });
 
-            let point = new google.maps.LatLng(poiLocation.lat, poiLocation.lng);
-            this.mapBounds.extend(point);
+            this.mapBounds.extend(this.poiData[x].location);
         }
     }
 }
