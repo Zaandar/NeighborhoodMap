@@ -11,10 +11,6 @@ class PoiData {
     }
 }
 
-// the application view
-class View {
-}
-
 // the application data model
 class Model {
     constructor() {
@@ -37,7 +33,6 @@ class ViewModel {
         let self = this;
 
         self.model = new Model();
-        self.view = new View();
 
         self.poiData = self.model.poi();
         self.poiMarkers = [];
@@ -90,18 +85,23 @@ class ViewModel {
 
             // set a listener for clicks and display the info window
             poiMarker.addListener('click', function () {
+
+                // if there is an open infoWindow, close it
                 if (openWindow){
                     openWindow.close();
                 }
 
                 infoWindow.open(map, poiMarker);
                 infoWindow.setContent(poiMarker.title);
-                
+
+                // set the currently open infoWindow so we
+                // can close it if another marker is clicked
                 openWindow = infoWindow;
             });
 
+            // if the infoWindow is closed manually, set the
+            // currently open window to null
             infoWindow.addListener('closeclick',function(){
-                // infoWindow.setMarker = null;
                 openWindow = null;
             });
         }
