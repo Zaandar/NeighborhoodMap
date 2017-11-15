@@ -1,18 +1,28 @@
 let map;
 
-class View{
+class PoiData {
+    constructor(title, location) {
+        self = this;
+
+        self.title = title;
+        self.location = location;
+        self.marker; // populated later when we have a marker
+    }
 }
 
-class Model{
+class View {
+}
+
+class Model {
     constructor() {
         let self = this;
 
         self.poi = ko.observableArray([
-            { id: 0, title: 'Spectrum Stadium', location: {lat: 28.608254, lng: -81.192621}},
-            { id: 1, title: 'Computer Science Department', location: {lat: 28.60054, lng: -81.197614}},
-            { id: 2, title: 'Limbitless Solutions', location: {lat: 28.60687, lng: -81.196695}},
-            { id: 3, title: 'Central Florida Research Park', location: {lat: 28.587104, lng: -81.199559}},
-            { id: 4, title: 'Lazy Moon', location: {lat: 28.598338, lng: -81.219712}},
+            new PoiData('Spectrum Stadium', {lat: 28.608254, lng: -81.192621}),
+            new PoiData('Computer Science Department', {lat: 28.60054, lng: -81.197614}),
+            new PoiData('Limbitless Solutions', {lat: 28.60687, lng: -81.196695}),
+            new PoiData('Central Florida Research Park', {lat: 28.587104, lng: -81.199559}),
+            new PoiData('Lazy Moon', {lat: 28.598338, lng: -81.219712})
         ]);
     }
 }
@@ -33,8 +43,9 @@ class ViewModel {
         self.createMarkers();
     }
 
-    onClick(data, event){
-        google.maps.event.trigger(poiMarkers[this.id], 'click');
+    // ko calls this when a list item is cliked
+    onClick(data, event) {
+        google.maps.event.trigger(data.marker, 'click');
     }
 
     initMaps() {
@@ -58,6 +69,8 @@ class ViewModel {
                 id: x
             });
 
+            this.poiData[x].marker = poiMarker;
+
             this.poiMarkers.push(poiMarker);
 
             let infoWindow = new google.maps.InfoWindow({
@@ -80,7 +93,7 @@ function runApp() {
     ko.applyBindings(viewModel);
 }
 
-function handleError(){
+function handleError() {
     alert("Error loading maps");
 }
 
