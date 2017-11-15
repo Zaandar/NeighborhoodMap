@@ -1,25 +1,22 @@
 let map;
 
 class View{
-
 }
-
 
 class Model{
     constructor() {
         let self = this;
 
         self.poi = ko.observableArray([
-            { title: 'Spectrum Stadium', location: {lat: 28.608254, lng: -81.192621}},
-            { title: 'Computer Science Department', location: {lat: 28.60054, lng: -81.197614}},
-            { title: 'Limbitless Solutions', location: {lat: 28.60687, lng: -81.196695}},
-            { title: 'Central Florida Research Park', location: {lat: 28.587104, lng: -81.199559}},
-            { title: 'Lazy Moon', location: {lat: 28.598338, lng: -81.219712}},
+            { id: 0, title: 'Spectrum Stadium', location: {lat: 28.608254, lng: -81.192621}},
+            { id: 1, title: 'Computer Science Department', location: {lat: 28.60054, lng: -81.197614}},
+            { id: 2, title: 'Limbitless Solutions', location: {lat: 28.60687, lng: -81.196695}},
+            { id: 3, title: 'Central Florida Research Park', location: {lat: 28.587104, lng: -81.199559}},
+            { id: 4, title: 'Lazy Moon', location: {lat: 28.598338, lng: -81.219712}},
         ]);
     }
 }
 
-// TODO understand scope in a class
 class ViewModel {
     constructor() {
         let self = this;
@@ -27,10 +24,17 @@ class ViewModel {
         self.model = new Model();
         self.view = new View();
 
+        self.poiData = self.model.poi();
+        self.poiMarkers = [];
+
         self.mapBounds = new google.maps.LatLngBounds();
 
         self.initMaps();
         self.createMarkers();
+    }
+
+    onClick(data, event){
+        google.maps.event.trigger(poiMarkers[this.id], 'click');
     }
 
     initMaps() {
@@ -41,12 +45,10 @@ class ViewModel {
     }
 
     createMarkers() {
-        let poiMarkers = [];
+        for (let x = 0; x < this.poiData.length; x++) {
 
-        for (let x = 0; x < this.model.poi().length; x++) {
-
-            let poiLocation = this.model.poi()[x].location;
-            let poiTitle = this.model.poi()[x].title;
+            let poiLocation = this.poiData[x].location;
+            let poiTitle = this.poiData[x].title;
 
             let poiMarker = new google.maps.Marker({
                 map: map,
@@ -56,10 +58,10 @@ class ViewModel {
                 id: x
             });
 
-            poiMarkers.push(poiMarker);
+            this.poiMarkers.push(poiMarker);
 
             let infoWindow = new google.maps.InfoWindow({
-                content: poiMarkers[x].title
+                content: this.poiMarkers[x].title
             });
 
             poiMarker.addListener('click', function () {
@@ -81,3 +83,5 @@ function runApp() {
 function handleError(){
     alert("Error loading maps");
 }
+
+

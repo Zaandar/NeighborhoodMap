@@ -10,10 +10,10 @@
         <div class='listView'>
             <h4>University of Central Florida</h4>
             <h5>Places of Interest</h5>
-<!--TODO dont access the model call a method instead-->
-            <ul data-bind="foreach: model.poi">
+
+            <ul data-bind="foreach: poiData">
                 <li>
-                    <span data-bind="text: title"> </span>
+                    <span data-bind='click:  $parent.onClick, text: title'></span>
                 </li>
             </ul>
         </div>
