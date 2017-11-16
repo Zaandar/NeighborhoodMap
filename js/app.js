@@ -54,6 +54,8 @@ class ViewModel {
                     let match = self.stringStartsWith(item.title.toLowerCase(), filter);
 
                     item.marker.setVisible(match);
+                    infoWindow.close();
+                    openWindow = null;
 
                     return match;
                 });
@@ -108,7 +110,7 @@ class ViewModel {
             this.poiMarkers.push(poiMarker);
 
             // create an info window for the marker
-            let infoWindow = new google.maps.InfoWindow();
+            infoWindow = new google.maps.InfoWindow();
 
             // set a listener for clicks and display the info window
             poiMarker.addListener('click', function () {
@@ -137,6 +139,7 @@ class ViewModel {
 
 
 let openWindow = null;
+let infoWindow;
 
 function runApp() {
     let viewModel = new ViewModel();
