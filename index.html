@@ -11,12 +11,19 @@
         <div class='listView'>
             <h4>University of Central Florida</h4>
             <h5>Places of Interest</h5>
-            <!-- knockout.js will fill in with the contents of the poi array-->
-            <ul data-bind="foreach: poiData">
-                <li>
-                    <span data-bind='click:  $parent.onClick, text: title'></span>
-                </li>
-            </ul>
+
+            <div>
+                <span>Filter: <input type="text" data-bind="textInput: filterText" /></span>
+            </div>
+
+            <div>
+                <!-- knockout.js will fill in with the contents of the poi array-->
+                <ul data-bind="foreach: filteredPoiMarkers">
+                    <li>
+                        <span data-bind='click: $parent.onClick, text: title'></span>
+                    </li>
+                </ul>
+            </div>
         </div>
 
         <div id="map"></div>

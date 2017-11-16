@@ -21,7 +21,7 @@ class Model {
             new PoiData('Computer Science Department', {lat: 28.60054, lng: -81.197614}),
             new PoiData('Limbitless Solutions', {lat: 28.60687, lng: -81.196695}),
             new PoiData('Central Florida Research Park', {lat: 28.587104, lng: -81.199559}),
-            new PoiData('Lazy Moon', {lat: 28.598338, lng: -81.219712})
+            new PoiData('Lazy Moon Pizza', {lat: 28.598338, lng: -81.219712})
         ]);
     }
 }
@@ -36,10 +36,37 @@ class ViewModel {
 
         self.poiData = self.model.poi();
         self.poiMarkers = [];
+        // self.filteredPoiMarkers;
+        self.filterText = ko.observable("jhjhjh");
 
         self.initMaps();
         self.createMarkers();
+
+        // Thanks to http://www.knockmeout.net for the tutorial
+        self.filteredPoiMarkers = ko.computed( function() {
+
+            var filter = self.filterText().toLowerCase();
+
+            if (!filter){
+                return self.poiMarkers;
+            }
+            else {
+                return ko.utils.arrayFilter(self.poiData, function (item) {
+                    let match = self.stringStartsWith(item.title.toLowerCase(), filter);
+                    console.log(item.title +" "+ match +" "+filter);
+                    return match;
+                });
+            }
+        });
     }
+
+    // courtesy of knockout.js
+    stringStartsWith(string, startsWith) {
+        string = string || "";
+        if (startsWith.length > string.length)
+            return false;
+        return string.substring(0, startsWith.length) === startsWith;
+    };
 
     // ko calls this when a list item is clicked
     onClick(data, event) {
