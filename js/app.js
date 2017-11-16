@@ -36,24 +36,25 @@ class ViewModel {
 
         self.poiData = self.model.poi();
         self.poiMarkers = [];
-        // self.filteredPoiMarkers;
-        self.filterText = ko.observable("jhjhjh");
+        self.filterText = ko.observable("");
 
         self.initMaps();
         self.createMarkers();
 
         // Thanks to http://www.knockmeout.net for the tutorial
-        self.filteredPoiMarkers = ko.computed( function() {
+        self.filteredPoiMarkers = ko.computed(function () {
 
             var filter = self.filterText().toLowerCase();
 
-            if (!filter){
+            if (!filter) {
                 return self.poiMarkers;
             }
             else {
                 return ko.utils.arrayFilter(self.poiData, function (item) {
                     let match = self.stringStartsWith(item.title.toLowerCase(), filter);
-                    console.log(item.title +" "+ match +" "+filter);
+
+                    item.marker.setVisible(match);
+
                     return match;
                 });
             }
@@ -109,12 +110,11 @@ class ViewModel {
             // create an info window for the marker
             let infoWindow = new google.maps.InfoWindow();
 
-
             // set a listener for clicks and display the info window
             poiMarker.addListener('click', function () {
 
                 // if there is an open infoWindow, close it
-                if (openWindow){
+                if (openWindow) {
                     openWindow.close();
                 }
 
@@ -128,7 +128,7 @@ class ViewModel {
 
             // if the infoWindow is closed manually, set the
             // currently open window to null
-            infoWindow.addListener('closeclick',function(){
+            infoWindow.addListener('closeclick', function () {
                 openWindow = null;
             });
         }
@@ -138,14 +138,12 @@ class ViewModel {
 
 let openWindow = null;
 
-function runApp()
-{
+function runApp() {
     let viewModel = new ViewModel();
     ko.applyBindings(viewModel);
 }
 
-function handleError()
-{
+function handleError() {
     alert("Error loading maps");
 }
 
