@@ -6,7 +6,7 @@ class PoiData {
         self = this;
 
         self.title = title;
-        self.location = location;
+        self.location = new google.maps.LatLng(location.lat, location.lng);
         self.marker; // populated later when we have a marker
     }
 }
@@ -43,19 +43,29 @@ class ViewModel {
 
         // Thanks to http://www.knockmeout.net for the tutorial
         self.filteredPoiMarkers = ko.computed(function () {
-
             var filter = self.filterText().toLowerCase();
 
+            // if no filter, return the original array
             if (!filter) {
+                self.poiMarkers.forEach(function(item){
+                    item.setVisible(true);
+                });
                 return self.poiMarkers;
             }
             else {
+                // return the filtered array
                 return ko.utils.arrayFilter(self.poiData, function (item) {
                     let match = self.stringStartsWith(item.title.toLowerCase(), filter);
 
+                    // set marker to visible depending on whether or not
+                    // it matches the filter
                     item.marker.setVisible(match);
-                    infoWindow.close();
-                    openWindow = null;
+
+                    // close any open infoWindow
+                    if (!match  && (infoWindow.getPosition() === item.location)) {
+                        infoWindow.close();
+                        openWindow = null;
+                    }
 
                     return match;
                 });
@@ -64,6 +74,7 @@ class ViewModel {
     }
 
     // courtesy of knockout.js
+    // returns true or false
     stringStartsWith(string, startsWith) {
         string = string || "";
         if (startsWith.length > string.length)
