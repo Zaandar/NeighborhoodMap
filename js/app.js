@@ -17,11 +17,16 @@ class Model {
         let self = this;
 
         self.poi = ko.observableArray([
-            new PoiData('Spectrum Stadium', {lat: 28.608254, lng: -81.192621}),
-            new PoiData('Computer Science Department', {lat: 28.60054, lng: -81.197614}),
-            new PoiData('Limbitless Solutions', {lat: 28.60687, lng: -81.196695}),
-            new PoiData('Central Florida Research Park', {lat: 28.587104, lng: -81.199559}),
-            new PoiData('Lazy Moon Pizza', {lat: 28.598338, lng: -81.219712})
+            new PoiData('Spectrum Stadium',
+                {lat: 28.608254, lng: -81.192621}),
+            new PoiData('University of Central Florida College of Engineering and Computer Science',
+                {lat: 28.60054, lng: -81.197614}),
+            new PoiData('Limbitless Solutions',
+                {lat: 28.60687, lng: -81.196695}),
+            new PoiData('Central Florida Research Park',
+                {lat: 28.587104, lng: -81.199559}),
+            new PoiData('Arboretum of the University of Central Florida',
+                {lat: 28.600866, lng: -81.196438})
         ]);
     }
 }
@@ -80,16 +85,17 @@ class ViewModel {
         if (startsWith.length > string.length)
             return false;
         return string.substring(0, startsWith.length) === startsWith;
-    };
+    }
 
     // ko calls this when a list item is clicked
     onClick(data, event) {
-        data.marker.setAnimation(google.maps.Animation.BOUNCE);
-        google.maps.event.trigger(data.marker, 'click');
+
+        data.setAnimation(google.maps.Animation.BOUNCE);
+        google.maps.event.trigger(data, 'click');
 
         // stop the bouncing markers
         setTimeout(function () {
-            data.marker.setAnimation(null);
+            data.setAnimation(null);
         }, 1400);
     }
 
@@ -131,8 +137,14 @@ class ViewModel {
                     openWindow.close();
                 }
 
-                infoWindow.open(map, poiMarker);
-                infoWindow.setContent(poiMarker.title);
+                $.ajax({
+                    url: "https://en.wikipedia.org/w/api.php?action=opensearch&search="+poiMarker.title+"&limit=1",
+                    dataType: 'jsonp',
+                    success: function(data){
+                        infoWindow.setContent(formatWikiResults(data));
+                        infoWindow.open(map, poiMarker);
+                    }
+                });
 
                 // set the currently open infoWindow so we
                 // can close it if another marker is clicked
@@ -148,7 +160,7 @@ class ViewModel {
     }
 }
 
-
+// global
 let openWindow = null;
 let infoWindow;
 
@@ -159,6 +171,24 @@ function runApp() {
 
 function handleError() {
     alert("Error loading maps");
+}
+
+function formatWikiResults(results){
+    let info = "";
+
+    if (results[1] != null) {
+        info += '<p><strong>' + results[1] + '</strong></p>';
+    }
+
+    if (results[2] != null) {
+        info += '<p>' + results[2] + '</p>';
+    }
+
+    if (results[3] != null) {
+        info += '<a href="' + results[3] + '"target="_blank">' + results[3] + '</a>';
+    }
+
+    return info;
 }
 
 
