@@ -114,10 +114,45 @@ class ViewModel {
         });
     }
 
+    handleMarkerClick() {
+        let marker = this;
+
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+
+        // stop the bouncing markers
+        setTimeout(function () {
+            marker.setAnimation(null);
+        }.bind(marker), 1400); // set "this" to marker
+
+        // if there is an open infoWindow, close it
+        if (openWindow) {
+            openWindow.close();
+        }
+
+        // infoWindow data courtesy of Wikipedia (www.wikipedia.org)
+        $.ajax({
+            url: "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + marker.title + "&limit=1",
+            dataType: 'jsonp',
+            success: function (data) {
+                infoWindow.setContent(formatWikiResults(data));
+                infoWindow.open(map, marker);
+            },
+            error: function () {
+                alert("Data not found for " + marker.title);
+            }
+        });
+
+        // set the currently open infoWindow so we
+        // can close it if another marker is clicked
+        openWindow = infoWindow;
+    }
+
+    handleInfoWindowClose() {
+        openWindow = null;
+    }
 
     // build and display a list of markers based on the poi list
     createMarkers() {
-
         for (let x = 0; x < this.poiData.length; x++) {
 
             // create a marker
@@ -139,14 +174,12 @@ class ViewModel {
             infoWindow = new google.maps.InfoWindow();
 
             // set a listener for clicks and display the info window
-            poiMarker.addListener('click', function () {
-                handleMarkerClick(this);
-            });
+            poiMarker.addListener('click', this.handleMarkerClick);
         }
 
         // if the infoWindow is closed manually, set the
         // currently open window to null
-        infoWindow.addListener('closeclick', handleInfoWindowClose);
+        infoWindow.addListener('closeclick', this.handleInfoWindowClose);
     }
 }
 
@@ -181,41 +214,3 @@ function formatWikiResults(results) {
 
     return info;
 }
-
-function handleInfoWindowClose() {
-    openWindow.close();
-    openWindow = null;
-}
-
-function handleMarkerClick(poiMarker) {
-    poiMarker.setAnimation(google.maps.Animation.BOUNCE);
-
-    // stop the bouncing markers
-    setTimeout(function () {
-        poiMarker.setAnimation(null);
-    }, 1400);
-
-    // if there is an open infoWindow, close it
-    if (openWindow) {
-        openWindow.close();
-    }
-
-    // infoWindow data courtesy of Wikipedia (www.wikipedia.org)
-    $.ajax({
-        url: "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + poiMarker.title + "&limit=1",
-        dataType: 'jsonp',
-        success: function (data) {
-            infoWindow.setContent(formatWikiResults(data));
-            infoWindow.open(map, poiMarker);
-        },
-        error: function () {
-            alert("Data not found for " + poiMarker.title);
-        }
-    });
-
-    // set the currently open infoWindow so we
-    // can close it if another marker is clicked
-    openWindow = infoWindow;
-}
-
-
