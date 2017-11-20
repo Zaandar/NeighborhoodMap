@@ -135,7 +135,7 @@ class ViewModel {
             dataType: 'jsonp'
         }).done(function (data) {
                 infoWindow.setContent(formatWikiResults(data));
-                infoWindow.open(map, marker)
+                infoWindow.open(map, marker);
             }).fail(function () {
                 alert("Data not found for " + marker.title);
             });
