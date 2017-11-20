@@ -61,7 +61,7 @@ class ViewModel {
                 // return the filtered array
                 return ko.utils.arrayFilter(self.poiMarkers, function (item) {
 
-                    // let match = self.stringStartsWith(item.title.toLowerCase(), filter);
+                    // find any of the text typed into the filter box
                     let match = self.contains(item.title.toLowerCase(), filter);
 
                     // set marker to visible depending on whether or not
@@ -74,12 +74,15 @@ class ViewModel {
                         openWindow = null;
                     }
 
+                    // return true or false
                     return match;
                 });
             }
         });
     }
 
+    // Check to see if the filter text exists in the string
+    // return true of false
     contains(string, filter) {
         if (string != null) {
             let result = false;
@@ -154,6 +157,9 @@ class ViewModel {
                     success: function(data){
                         infoWindow.setContent(formatWikiResults(data));
                         infoWindow.open(map, poiMarker);
+                    },
+                    error: function(data){
+                        alert("Data not found for " + poiMarker.title);
                     }
                 });
 
@@ -184,6 +190,7 @@ function handleError() {
     alert("Error loading maps");
 }
 
+// format the results from ajax call to Wikipedia API
 function formatWikiResults(results){
     let info = "";
 
