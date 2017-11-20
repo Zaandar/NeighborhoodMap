@@ -59,15 +59,17 @@ class ViewModel {
             }
             else {
                 // return the filtered array
-                return ko.utils.arrayFilter(self.poiData, function (item) {
-                    let match = self.stringStartsWith(item.title.toLowerCase(), filter);
+                return ko.utils.arrayFilter(self.poiMarkers, function (item) {
+
+                    // let match = self.stringStartsWith(item.title.toLowerCase(), filter);
+                    let match = self.contains(item.title.toLowerCase(), filter);
 
                     // set marker to visible depending on whether or not
                     // it matches the filter
-                    item.marker.setVisible(match);
+                    item.setVisible(match);
 
                     // close any open infoWindow
-                    if (!match  && (infoWindow.getPosition() === item.location)) {
+                    if (!match  && (infoWindow.getPosition() === item.position)) {
                         infoWindow.close();
                         openWindow = null;
                     }
@@ -78,18 +80,20 @@ class ViewModel {
         });
     }
 
-    // courtesy of knockout.js
-    // returns true or false
-    stringStartsWith(string, startsWith) {
-        string = string || "";
-        if (startsWith.length > string.length)
-            return false;
-        return string.substring(0, startsWith.length) === startsWith;
+    contains(string, filter) {
+        if (string != null) {
+            let result = false;
+
+            if (string.search(filter) >= 0) {
+                result = true;
+            }
+
+            return result;
+        }
     }
 
     // ko calls this when a list item is clicked
     onClick(data, event) {
-
         data.setAnimation(google.maps.Animation.BOUNCE);
         google.maps.event.trigger(data, 'click');
 
@@ -102,8 +106,8 @@ class ViewModel {
     // display the map
     initMaps() {
         map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 28.602427, lng: -81.20006},
-            zoom: 14
+            center: {lat: 28.599106, lng: -81.202319},
+            zoom: 15
         });
     }
 
@@ -131,12 +135,19 @@ class ViewModel {
 
             // set a listener for clicks and display the info window
             poiMarker.addListener('click', function () {
+                poiMarker.setAnimation(google.maps.Animation.BOUNCE);
+
+                // stop the bouncing markers
+                setTimeout(function () {
+                    poiMarker.setAnimation(null);
+                }, 1400);
 
                 // if there is an open infoWindow, close it
                 if (openWindow) {
                     openWindow.close();
                 }
 
+                // infoWindow data courtesy of Wikipedia (www.wikipedia.org)
                 $.ajax({
                     url: "https://en.wikipedia.org/w/api.php?action=opensearch&search="+poiMarker.title+"&limit=1",
                     dataType: 'jsonp',
