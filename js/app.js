@@ -132,15 +132,13 @@ class ViewModel {
         // infoWindow data courtesy of Wikipedia (www.wikipedia.org)
         $.ajax({
             url: "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + marker.title + "&limit=1",
-            dataType: 'jsonp',
-            success: function (data) {
+            dataType: 'jsonp'
+        }).done(function (data) {
                 infoWindow.setContent(formatWikiResults(data));
-                infoWindow.open(map, marker);
-            },
-            error: function () {
+                infoWindow.open(map, marker)
+            }).fail(function () {
                 alert("Data not found for " + marker.title);
-            }
-        });
+            });
 
         // set the currently open infoWindow so we
         // can close it if another marker is clicked
