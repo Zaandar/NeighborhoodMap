@@ -52,7 +52,7 @@ class ViewModel {
 
             // if no filter, return the original array
             if (!filter) {
-                self.poiMarkers.forEach(function(item){
+                self.poiMarkers.forEach(function (item) {
                     item.setVisible(true);
                 });
                 return self.poiMarkers;
@@ -69,7 +69,7 @@ class ViewModel {
                     item.setVisible(match);
 
                     // close any open infoWindow
-                    if (!match  && (infoWindow.getPosition() === item.position)) {
+                    if (!match && (infoWindow.getPosition() === item.position)) {
                         infoWindow.close();
                         openWindow = null;
                     }
@@ -139,7 +139,9 @@ class ViewModel {
             infoWindow = new google.maps.InfoWindow();
 
             // set a listener for clicks and display the info window
-            poiMarker.addListener('click', function(){handleMarkerClick(poiMarker)});
+            poiMarker.addListener('click', function () {
+                handleMarkerClick(this);
+            });
         }
 
         // if the infoWindow is closed manually, set the
@@ -162,7 +164,7 @@ function handleError() {
 }
 
 // format the results from ajax call to Wikipedia API
-function formatWikiResults(results){
+function formatWikiResults(results) {
     let info = "";
 
     if (results[1] !== null) {
@@ -180,12 +182,12 @@ function formatWikiResults(results){
     return info;
 }
 
-function handleInfoWindowClose(){
+function handleInfoWindowClose() {
     openWindow.close();
     openWindow = null;
 }
 
-function handleMarkerClick(poiMarker){
+function handleMarkerClick(poiMarker) {
     poiMarker.setAnimation(google.maps.Animation.BOUNCE);
 
     // stop the bouncing markers
@@ -200,13 +202,13 @@ function handleMarkerClick(poiMarker){
 
     // infoWindow data courtesy of Wikipedia (www.wikipedia.org)
     $.ajax({
-        url: "https://en.wikipedia.org/w/api.php?action=opensearch&search="+poiMarker.title+"&limit=1",
+        url: "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + poiMarker.title + "&limit=1",
         dataType: 'jsonp',
-        success: function(data){
+        success: function (data) {
             infoWindow.setContent(formatWikiResults(data));
             infoWindow.open(map, poiMarker);
         },
-        error: function(){
+        error: function () {
             alert("Data not found for " + poiMarker.title);
         }
     });
