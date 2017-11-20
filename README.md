@@ -2,6 +2,9 @@
 The UCF Neighborhood Map is a map of the *University of Central Florida.* 
 It displays markers on points of interest in the University
 
+## To Start Application
+Double-click on the index.hmtl file in this directory.
+
 ###User Controls
 * Points of Interest (PoI) list: Displays a textual list of points of interest
 * Map and markers: Display location of the points of interest listed in the PoI list
