@@ -48,7 +48,7 @@ class ViewModel {
 
         // Thanks to http://www.knockmeout.net for the tutorial
         self.filteredPoiMarkers = ko.computed(function () {
-            var filter = self.filterText().toLowerCase();
+            let filter = self.filterText().toLowerCase();
 
             // if no filter, return the original array
             if (!filter) {
@@ -84,7 +84,7 @@ class ViewModel {
     // Check to see if the filter text exists in the string
     // return true of false
     contains(string, filter) {
-        if (string != null) {
+        if (string !== null) {
             let result = false;
 
             if (string.search(filter) >= 0) {
@@ -96,7 +96,7 @@ class ViewModel {
     }
 
     // ko calls this when a list item is clicked
-    onClick(data, event) {
+    onClick(data) {
         data.setAnimation(google.maps.Animation.BOUNCE);
         google.maps.event.trigger(data, 'click');
 
@@ -158,7 +158,7 @@ class ViewModel {
                         infoWindow.setContent(formatWikiResults(data));
                         infoWindow.open(map, poiMarker);
                     },
-                    error: function(data){
+                    error: function(){
                         alert("Data not found for " + poiMarker.title);
                     }
                 });
@@ -194,16 +194,16 @@ function handleError() {
 function formatWikiResults(results){
     let info = "";
 
-    if (results[1] != null) {
+    if (results[1] !== null) {
         info += '<p><strong>' + results[1] + '</strong></p>';
     }
 
-    if (results[2] != null) {
+    if (results[2] !== null) {
         info += '<p>' + results[2] + '</p>';
     }
 
-    if (results[3] != null) {
-        info += '<a href="' + results[3] + '"target="_blank">' + results[3] + '</a>';
+    if (results[3] !== null) {
+        info += '<a href="' + results[3] + '" target="_blank">' + results[3] + '</a>';
     }
 
     return info;
