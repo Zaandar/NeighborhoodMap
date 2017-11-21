@@ -4,17 +4,20 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>UCF Neighborhood Map</title>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <link rel="stylesheet" href="css/app.css">
         <link href="https://fonts.googleapis.com/css?family=Roboto:Thin" rel="stylesheet">
     </head>
     <body>
-        <div class='listView'>
-            <h4>University of Central Florida</h4>
-            <h5>Places of Interest</h5>
-
+        <div class='list-view'>
             <div>
-                <span class='filter'>Filter: <input type="text" data-bind="textInput: filterText" /></span>
+                <h4>University of Central Florida</h4>
+                <h5>Places of Interest</h5>
+            </div>
+
+            <div class='filter'>
+                <label for="filter-input">Filter Markers:</label>
+                <input id="filter-input" type="text" data-bind="textInput: filterText" />
             </div>
 
             <div>
@@ -37,4 +40,5 @@
         </script>
     </body>
 </html>
+
 

@@ -7,11 +7,11 @@ body {
 }
 
 #map {
-    bottom:0px;
+    bottom:0;
     height: 100%;
     left: 282px;
     position: absolute;
-    right: 0px;
+    right: 0;
 }
 
 h4, h5, h6 {
@@ -20,40 +20,114 @@ h4, h5, h6 {
 }
 
 .filter{
-    margin: 30px;
     font-size: smaller;
+    text-align: center;
 }
 
 input{
     border: 2px solid #444;
     border-radius: 6px;
+    display: inline-flex;
+    width: 155px;
 }
 
 ul {
-    list-style-type: none;
-    margin: 0px;
-    padding: 15px;
+    list-style-type:  none;
+    margin: 0;
+    padding: 10px;
     line-height: 20px;
+    text-align: center;
 }
 
 li{
     background: #8e9294;
     border: 2px solid #444;
     border-radius: 6px;
-    margin-left: 10px;
-    margin-right: 10px;
     margin-bottom: 10px;
-    text-align: center;
     font-size: smaller;
 }
 
-.listView {
+.list-view {
     background: #000;
     color: #ffc904;
     border: 3px solid #8e9294;
     border-radius: 3px;
     height: 100%;
-    line-height: 10px;
-    text-align: left;
+    line-height: 15px;
     width: 275px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-content: flex-start;
+
+}
+
+@media (min-width:320px) {
+    .list-view {
+        width: 125px;
+    }
+
+    #map {
+        left: 130px;
+    }
+
+    input{
+        width: 105px;
+    }
+}
+
+@media (min-width:480px) {
+    .list-view {
+        width: 175px;
+    }
+
+    #map {
+        left: 180px;
+    }
+
+    input{
+        width: 155px;
+    }
+}
+
+@media (min-width:640px) {
+    .list-view {
+        width: 200px;
+    }
+
+    #map {
+        left: 205px;
+    }
+
+    input{
+        width: 180px;
+    }
+}
+
+@media (min-width:780px) {
+    .list-view {
+        width: 225px;
+    }
+
+    #map {
+        left: 230px;
+    }
+
+    input{
+        width: 205px;
+    }
+}
+
+@media (min-width:960px) {
+    .list-view {
+        width: 250px;
+    }
+
+    #map {
+        left: 255px;
+    }
+
+    input{
+        width: 230px;
+    }
 }
